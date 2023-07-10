@@ -3,6 +3,7 @@ version: 3
 
 build_arg_defaults:
   ANSIBLE_GALAXY_CLI_COLLECTION_OPTS: '--pre'
+  EE_BASE_IMAGE: 'registry.redhat.io/ansible-automation-platform-24/ee-supported-rhel8'
 
 
 dependencies:
@@ -20,6 +21,9 @@ dependencies:
 images:
   base_image:
     name: registry.redhat.io/ansible-automation-platform-24/ee-supported-rhel8:latest
+
+options:
+  package_manager_path: /usr/bin/microdnf
 
 additional_build_files:
     - src: ansible.cfg
