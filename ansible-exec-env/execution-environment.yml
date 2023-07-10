@@ -3,8 +3,6 @@ version: 3
 
 build_arg_defaults:
   ANSIBLE_GALAXY_CLI_COLLECTION_OPTS: '--pre'
-  EE_BASE_IMAGE: 'registry.redhat.io/ansible-automation-platform-24/ee-supported-rhel8'
-
 
 dependencies:
   ansible_core:
