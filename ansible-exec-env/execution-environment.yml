@@ -1,0 +1,37 @@
+---
+version: 3
+
+build_arg_defaults:
+  ANSIBLE_GALAXY_CLI_COLLECTION_OPTS: '--pre'
+
+
+dependencies:
+  ansible_core:
+    package_pip: ansible-core
+  ansible_runner:
+    package_pip: ansible-runner
+  galaxy: requirements.yml
+  python:
+    - six
+    - psutil
+  system: bindep.txt
+
+
+images:
+  base_image:
+    name: registry.redhat.io/ansible-automation-platform-21/ee-minimal-rhel8:latest
+
+additional_build_files:
+    - src: ansible.cfg
+      dest: configs
+
+additional_build_steps:
+  prepend_galaxy:
+    - ADD _build/configs/ansible.cfg ~/.ansible.cfg
+
+  prepend_final: |
+    RUN whoami
+    RUN cat /etc/os-release
+  append_final:
+    - RUN echo This is a post-install command!
+    - RUN ls -la /etc
