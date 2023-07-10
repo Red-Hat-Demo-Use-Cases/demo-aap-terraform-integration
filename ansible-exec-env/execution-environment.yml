@@ -28,12 +28,16 @@ additional_build_files:
       dest: configs
 
 additional_build_steps:
+  append_base:
+    - RUN microdnf install yum-utils && yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo && microdnf install terraform
+
   prepend_galaxy:
     - ADD _build/configs/ansible.cfg ~/.ansible.cfg
 
   prepend_final: |
     RUN whoami
     RUN cat /etc/os-release
+
   append_final:
     - RUN echo This is a post-install command!
     - RUN ls -la /etc
