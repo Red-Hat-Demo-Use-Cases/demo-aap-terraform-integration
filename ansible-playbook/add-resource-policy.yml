@@ -1,6 +1,7 @@
 ---
 - name: Create new resource policy in Azure
   hosts: localhost
+  become: true
 
   vars_prompt:
 
@@ -16,7 +17,53 @@
       prompt: JSON Object representing the new policy rule
       private: false
 
+
   tasks:
-    - name: Write debug message
-      ansible.builtin.debug:
-        msg: "Generate {{ policy_name }}"
+    # - name: Fetch git repository
+    #   ansible.builtin.git:
+    #     repo: "https://github.com/Red-Hat-Demo-Use-Cases/demo-aap-terraform-integration.git"
+    #     dest: "/tmp/aaa"
+    #     clone: true
+
+    - name: Apply plan
+      cloud.terraform.terraform:
+        project_path: "/tmp/aaa/terraform-plan"
+        # plan_file: "main.tf"
+        force_init: true
+        variables_files: dev.policies.tfvars
+        state: present  # applying a plan doesn't have a switch for this
+        # optional config
+        # state_file: "{{ terraform_options.state_file | default(omit) }}"
+        # force_init: "{{ terraform_options.force_init | default(omit) }}"
+        # binary_path: "{{ terraform_options.binary_path | default(omit) }}"
+        # plugin_paths: "{{ terraform_options.plugin_paths | default(omit) }}"
+        # workspace: "{{ terraform_options.workspace | default(omit) }}"
+        # lock: "{{ terraform_options.lock | default(omit) }}"
+        # lock_timeout: "{{ terraform_options.lock_timeout | default(omit) }}"
+        # parallelism: "{{ terraform_options.parallelism | default(omit) }}"
+
+
+  # roles:
+  #   - role: cloud.terraform.git_plan
+  #     repo_url: https://github.com/Red-Hat-Demo-Use-Cases/demo-aap-terraform-integration.git
+  #     repo_dir: /tmp/aaa
+  #     plan_file: main.tf
+
+
+  #     git_options:
+  #       separate_git_dir: terraform-plan
+
+      # mapping_variables:
+      #   host_lists: terraform_var_host_list
+      #   name: terraform_var_name
+      #   ip: terraform_var_ip
+      #   user: terraform_var_user
+      #   group: terraform_var_group
+
+
+
+
+  # tasks:
+  #   - name: Write debug message
+  #     ansible.builtin.debug:
+  #       msg: "Generate {{ policy_name }}"

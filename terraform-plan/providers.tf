@@ -5,6 +5,12 @@ terraform {
       version = "3.64.0"
     }
   }
+  backend "azurerm" {
+    resource_group_name  = "openenv-df57p"
+    storage_account_name = "poolo01o48oterraform"
+    container_name       = "tfstate"
+    key                  = "prod.terraform.tfstate"
+  }
 }
 
 provider "azurerm" {
