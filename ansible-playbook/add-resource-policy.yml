@@ -19,11 +19,11 @@
 
 
   tasks:
-    # - name: Fetch git repository
-    #   ansible.builtin.git:
-    #     repo: "https://github.com/Red-Hat-Demo-Use-Cases/demo-aap-terraform-integration.git"
-    #     dest: "/tmp/aaa"
-    #     clone: true
+    - name: Fetch git repository
+      ansible.builtin.git:
+        repo: "https://github.com/Red-Hat-Demo-Use-Cases/demo-aap-terraform-integration.git"
+        dest: "/tmp/aaa"
+        clone: true
 
     - name: Apply plan
       cloud.terraform.terraform:
