@@ -1,3 +1,12 @@
+variable "environment" {
+  type = string
+
+  validation {
+    condition     = contains(["dev", "prod"], var.environment)
+    error_message = "Valid values for var: environment are (dev, prod)."
+  }
+}
+
 variable "common_policy_collection" {
     type = list(object(
         {

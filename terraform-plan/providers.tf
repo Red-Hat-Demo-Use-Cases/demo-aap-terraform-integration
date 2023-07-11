@@ -9,7 +9,7 @@ terraform {
     resource_group_name  = "openenv-df57p"
     storage_account_name = "poolo01o48oterraform"
     container_name       = "tfstate"
-    key                  = "prod.terraform.tfstate"
+    key                  = "${var.environment}.terraform.tfstate"
   }
 }
 

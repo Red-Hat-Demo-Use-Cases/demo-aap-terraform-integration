@@ -1,21 +1,25 @@
 ---
 - name: Create new resource policy in Azure
   hosts: localhost
-  become: true
+  # become: true
 
   vars_prompt:
 
-    - name: policy_name
-      prompt: New policy name
+    - name: environment
+      prompt: Choose an environment between dev and prod
       private: false
 
-    - name: policy_description
-      prompt: Summary of the policy rule
-      private: false
+    # - name: policy_name
+    #   prompt: New policy name
+    #   private: false
 
-    - name: policy_rule
-      prompt: JSON Object representing the new policy rule
-      private: false
+    # - name: policy_description
+    #   prompt: Summary of the policy rule
+    #   private: false
+
+    # - name: policy_rule
+    #   prompt: JSON Object representing the new policy rule
+    #   private: false
 
 
   tasks:
@@ -30,7 +34,7 @@
         project_path: "/tmp/aaa/terraform-plan"
         # plan_file: "main.tf"
         force_init: true
-        variables_files: dev.policies.tfvars
+        variables_files: "{{ environment }}.policies.tfvars"
         state: present  # applying a plan doesn't have a switch for this
         # optional config
         # state_file: "{{ terraform_options.state_file | default(omit) }}"
