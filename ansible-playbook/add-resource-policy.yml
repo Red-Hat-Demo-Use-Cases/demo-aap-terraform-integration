@@ -1,0 +1,22 @@
+---
+- name: Create new resource policy in Azure
+  hosts: localhost
+
+  vars_prompt:
+
+    - name: policy_name
+      prompt: New policy name
+      private: false
+
+    - name: policy_description
+      prompt: Summary of the policy rule
+      private: false
+
+    - name: policy_rule
+      prompt: JSON Object representing the new policy rule
+      private: false
+
+  tasks:
+    - name: Write debug message
+      ansible.builtin.debug:
+        msg: "Generate {{ policy_name }}"
