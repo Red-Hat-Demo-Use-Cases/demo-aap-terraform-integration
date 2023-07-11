@@ -36,6 +36,7 @@
         force_init: true
         variables_files: "{{ environment }}.policies.tfvars"
         state: present  # applying a plan doesn't have a switch for this
+        workspace: "{{ environment }}"
         # optional config
         # state_file: "{{ terraform_options.state_file | default(omit) }}"
         # force_init: "{{ terraform_options.force_init | default(omit) }}"
