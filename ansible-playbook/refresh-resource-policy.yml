@@ -39,7 +39,15 @@
         variables_files: "{{ policy_ev }}.policies.tfvars"
         state: present  # applying a plan doesn't have a switch for this
         workspace: "{{ item }}"
+      environment:
+        ARM_SUBSCRIPTION_ID: "{{ ansible_env.AZURE_SUBSCRIPTION_ID }}"
+        ARM_TENANT_ID: "{{ ansible_env.AZURE_TENANT }}"
+        ARM_CLIENT_ID: "{{ ansible_env.AZURE_CLIENT_ID }}"
+        ARM_CLIENT_SECRET: "{{ ansible_env.AZURE_SECRET }}"
       loop: "{{ env_to_refresh }}"
+
+
+
 
     # - name: Write debug message
     #   ansible.builtin.debug:
