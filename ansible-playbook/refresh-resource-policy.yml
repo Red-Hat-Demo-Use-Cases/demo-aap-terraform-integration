@@ -1,0 +1,34 @@
+#
+#  Clone policy repo and perform a terraform apply.
+#    To add policy, use the add-resource-policy playbook, then run this one.
+#    To modify or delete a policy, make the change directly in the tfvars file and then run this playbook.
+#
+
+---
+- name: Create new resource policy in Azure
+  hosts: localhost
+
+  vars_prompt:
+    - name: policy_ev
+      prompt: Choose an environment between dev and prod
+      private: false
+
+  tasks:
+    - name: Fetch git repository
+      ansible.builtin.git:
+        repo: "https://github.com/Red-Hat-Demo-Use-Cases/demo-aap-terraform-integration.git"
+        dest: "/tmp/aaa"
+        clone: true
+        force: true
+
+    - name: Apply plan for environment {{ policy_ev }}
+      cloud.terraform.terraform:
+        project_path: "/tmp/aaa/terraform-plan"
+        force_init: true
+        variables_files: "{{ policy_ev }}.policies.tfvars"
+        state: present  # applying a plan doesn't have a switch for this
+        workspace: "{{ policy_ev }}"
+
+    # - name: Write debug message
+    #   ansible.builtin.debug:
+    #     msg: "Generate {{ policy_ev }}"

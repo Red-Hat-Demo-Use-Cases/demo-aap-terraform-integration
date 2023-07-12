@@ -16,7 +16,7 @@ resource "azurerm_policy_definition" "common_policies" {
   display_name        = var.common_policy_collection[count.index].name
   # management_group_id = azurerm_management_group.example.id
 
-  policy_rule = file("${path.module}/az-rg-policies/dev-policy-01.json")
+  policy_rule = file(var.common_policy_collection[count.index].rule)
 }
 
 resource "azurerm_policy_definition" "env_specific_policies" {
@@ -30,7 +30,6 @@ resource "azurerm_policy_definition" "env_specific_policies" {
   # management_group_id = azurerm_management_group.example.id
 
   policy_rule = file(var.env_specific_policy_collection[count.index].rule)
-  # policy_rule = file("${path.module}/az-rg-policies/dev-policy-02.json")
   
 }
 
