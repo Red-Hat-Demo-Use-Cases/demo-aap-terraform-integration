@@ -19,6 +19,15 @@ env_specific_policy_collection = [
 },
 # END ANSIBLE MANAGED POLICY dev-test-2-8c923166-5e1b-52ff-9ba3-16157438db93
 
+# BEGIN ANSIBLE MANAGED POLICY dev-test-2-49ee44f2-590f-5fa4-b65b-e530b3e27035
+
+{
+  name = "test-2"
+  description = "kfjd"
+  rule = "az-rg-policies/dev-test-2-544de2ca-d3ef-55e8-a3c7-ebdf928bb3d5.json"
+},
+# END ANSIBLE MANAGED POLICY dev-test-2-49ee44f2-590f-5fa4-b65b-e530b3e27035
+
 ## DYNAMIC-INSERT
 
 ]
