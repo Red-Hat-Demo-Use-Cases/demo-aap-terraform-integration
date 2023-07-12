@@ -3,9 +3,6 @@
   hosts: localhost
   # become: true
 
-  vars:
-    local_repo_dir: "/tmp/aaa"
-
   vars_prompt:
 
     - name: policy_ev
@@ -24,6 +21,10 @@
       prompt: JSON Object representing the new policy rule
       private: false
 
+  vars:
+    local_repo_dir: "/tmp/aaa"
+    new_policy_filename: "{{ policy_name }}-{{ 99999999 | random | to_uuid }}.json"
+
 # clone terraform-plan 
 # add policy block in the xxx.policies.tfvars
 # add policy rule in the az-rg-policies folder
@@ -37,15 +38,43 @@
         clone: true
         force: true
 
+    - name: Write policy in its json file
+      ansible.builtin.copy:
+        dest: "{{ local_repo_dir }}/terraform-plan/az-rg-policies/{{ new_policy_filename }}"
+        mode: '0644'
+        content: "{{ policy_rule }}"
+        # owner: bin
+        # group: wheel
 
     - name: Add string in file
       ansible.builtin.blockinfile:
         path: "{{ local_repo_dir }}/terraform-plan/{{ policy_ev }}.policies.tfvars"
         insertbefore: "## DYNAMIC-INSERT"
         block: |
-                Hello
-                Hello,
+                  {
+                    name = "{{ policy_name }}"
+                    description = "{{ policy_description }}"
+                    rule = "az-rg-policies/{{ new_policy_filename }}"
+                  },
 
+    - name: "Add output directory to git"
+      ansible.builtin.shell: |
+        git config --global user.name "rhaap"
+        git config --global user.email "rhaap@rhaap.com"
+        git add -A && git commit -m "RHAAP Job ID {{ tower_job_id }}: Automated Commit by Ansible  " && git push
+      args:
+        chdir: "{{ local_repo_dir }}"
+      ignore_errors: true
+      register: output
+      failed_when: >
+        output.msg != "" and
+        ("error" in output.msg or
+        "conflict" in output.msg or
+        "Errno" in output.msg or
+        "fatal" in output.msg or
+        (output.stdout != "" and
+        "nothing to commit, working tree clean" not in output.stdout) or
+        (output.stderr != ""))
 
   # tasks:
   #   - name: Write debug message
