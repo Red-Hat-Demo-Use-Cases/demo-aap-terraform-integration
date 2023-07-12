@@ -1,5 +1,5 @@
 .DS_Store
-# ansible-exec-env/context
+ansible-exec-env/context
 terraform-plan/.*
 terraform-plan/terraform.tfstate*
 README.md.k
