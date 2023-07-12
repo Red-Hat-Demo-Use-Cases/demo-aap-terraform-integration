@@ -45,6 +45,8 @@
   tasks:
     - name: Fetch git repository
       ansible.builtin.git:
+        accept_hostkey: true
+        accept_newhostkey: true
         repo: "{{ git_repo }}"
         dest: "{{ local_repo_dir }}"
         clone: true
