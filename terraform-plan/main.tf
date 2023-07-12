@@ -29,8 +29,8 @@ resource "azurerm_policy_definition" "env_specific_policies" {
   display_name        = var.env_specific_policy_collection[count.index].name
   # management_group_id = azurerm_management_group.example.id
 
-  # policy_rule = file("${var.env_specific_policy_collection[count.index].rule}")
-  policy_rule = file("${path.module}/az-rg-policies/dev-policy-02.json")
+  policy_rule = file(var.env_specific_policy_collection[count.index].rule)
+  # policy_rule = file("${path.module}/az-rg-policies/dev-policy-02.json")
   
 }
 
