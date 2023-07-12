@@ -24,6 +24,7 @@
   vars:
     local_repo_dir: "/tmp/aaa"
     new_policy_filename: "{{ policy_name }}-{{ 99999999 | random | to_uuid }}.json"
+    tower_job_id: "00000"
 
 # clone terraform-plan 
 # add policy block in the xxx.policies.tfvars
