@@ -62,7 +62,7 @@
       ansible.builtin.blockinfile:
         path: "{{ local_repo_dir }}/terraform-plan/{{ policies_tfvars_file }}"
         insertbefore: "## DYNAMIC-INSERT"
-        marker: "# {mark} ANSIBLE MANAGED POLICY\n"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
         marker_begin: "BEGIN {{ policy_unique_name }}"
         marker_end: "END {{ policy_unique_name }}"
         block: |
