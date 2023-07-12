@@ -29,7 +29,8 @@
   vars:
     git_repo: "git@github.com:Red-Hat-Demo-Use-Cases/demo-aap-terraform-integration.git"
     local_repo_dir: "/tmp/aaa"
-    policy_unique_name: "{{ policy_ev }}-{{ policy_name }}-{{ 99999999 | random | to_uuid }}"
+    # policy_unique_name: "{{ policy_ev }}-{{ policy_name }}-{{ 99999999 | random | to_uuid }}"
+    policy_unique_name: "{{ policy_ev }}-{{ policy_name }}"
     new_policy_filename: "{{ policy_unique_name }}.json"
     tower_job_id: "00000"
     # policies_tfvars_file: "{{ policy_ev }}.policies.{{ 'tfvars' if (policy_ev == 'common') else 'auto.tfvars'}}"
