@@ -10,8 +10,19 @@
 
   vars_prompt:
     - name: policy_ev
-      prompt: Choose an environment between dev and prod
+      prompt: Choose an environment between dev, prod or common
       private: false
+
+  pre_tasks:
+    - name: "Check if user selected a valid environment"
+      ansible.builtin.assert:
+        that: (env_list is contains(policy_ev) or policy_ev == 'common')
+
+  vars:
+    env_list:
+      - dev
+      - prod
+    env_to_refresh: "{% if policy_ev == 'common' %}{{ env_list }}{% else %}['{{ policy_ev }}']{% endif %}"
 
   tasks:
     - name: Fetch git repository
@@ -27,8 +38,10 @@
         force_init: true
         variables_files: "{{ policy_ev }}.policies.tfvars"
         state: present  # applying a plan doesn't have a switch for this
-        workspace: "{{ policy_ev }}"
+        workspace: "{{ item }}"
+      loop: "{{ env_to_refresh }}"
 
     # - name: Write debug message
     #   ansible.builtin.debug:
-    #     msg: "Generate {{ policy_ev }}"
+    #     msg: "Generate {{ item }}"
+    #   loop: "{{ env_to_refresh }}"
