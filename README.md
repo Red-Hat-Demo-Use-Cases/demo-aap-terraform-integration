@@ -1,4 +1,2 @@
-## Red Hat Ansible Automation Platform 
-#### and Terraform integration demo using Microsoft Azure cloud
-[![quay-aap-ee-image-build-status](https://quay.io/repository/dovid/aap-ee-terraform/status)](https://quay.io/repository/dovid/aap-ee-terraform)
+## Red Hat AAP 2.4 and Terraform integration demo using Microsoft Azure cloud
 ---
