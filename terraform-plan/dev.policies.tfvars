@@ -15,9 +15,9 @@ env_specific_policy_collection = [
 
 # BEGIN ANSIBLE MANAGED BLOCK
 {
-  name = "dadas"
-  description = "asd"
-  rule = "az-rg-policies/dadas-50fcfac6-ac40-5202-ac70-ce3cd71de08a.json"
+  name = "test-policy-001"
+  description = "this is a policy"
+  rule = "az-rg-policies/test-policy-001-235c111e-dacc-5e64-90ec-75900dd38c47.json"
 },
 # END ANSIBLE MANAGED BLOCK
     ## DYNAMIC-INSERT
