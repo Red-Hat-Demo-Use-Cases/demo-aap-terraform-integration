@@ -22,8 +22,10 @@
       private: false
 
   vars:
+    git_repo: "git@github.com:Red-Hat-Demo-Use-Cases/demo-aap-terraform-integration.git"
     local_repo_dir: "/tmp/aaa"
-    new_policy_filename: "{{ policy_name }}-{{ 99999999 | random | to_uuid }}.json"
+    policy_unique_name: "{{ policy_name }}-{{ 99999999 | random | to_uuid }}"
+    new_policy_filename: "{{ policy_unique_name }}.json"
     tower_job_id: "00000"
 
 # clone terraform-plan 
@@ -34,7 +36,7 @@
   tasks:
     - name: Fetch git repository
       ansible.builtin.git:
-        repo: "https://github.com/Red-Hat-Demo-Use-Cases/demo-aap-terraform-integration.git"
+        repo: "{{ git_repo }}"
         dest: "{{ local_repo_dir }}"
         clone: true
         force: true
@@ -51,6 +53,7 @@
       ansible.builtin.blockinfile:
         path: "{{ local_repo_dir }}/terraform-plan/{{ policy_ev }}.policies.tfvars"
         insertbefore: "## DYNAMIC-INSERT"
+        marker: "# {marker} ANSIBLE MANAGED POLICY {{ policy_unique_name }}"
         block: |
                   {
                     name = "{{ policy_name }}"
