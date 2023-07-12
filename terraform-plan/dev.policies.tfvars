@@ -15,6 +15,13 @@ env_specific_policy_collection = [
   rule = "az-rg-policies/dev-test-from-aap-001.json"
 },
 # END ANSIBLE MANAGED BLOCK dev-test-from-aap-001
+# BEGIN ANSIBLE MANAGED BLOCK dev-real-test-001
+{
+  name = "real-test-001"
+  description = "ddd"
+  rule = "az-rg-policies/dev-real-test-001.json"
+},
+# END ANSIBLE MANAGED BLOCK dev-real-test-001
 ## DYNAMIC-INSERT
 
 ]
