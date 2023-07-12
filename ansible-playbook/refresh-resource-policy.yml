@@ -45,3 +45,16 @@
     #   ansible.builtin.debug:
     #     msg: "Generate {{ item }}"
     #   loop: "{{ env_to_refresh }}"
+
+
+#  {
+#     "if": {
+#       "not": {
+#         "field": "location",
+#         "equals": "westeurope"
+#       }
+#     },
+#     "then": {
+#       "effect": "Deny"
+#     }
+#   }
