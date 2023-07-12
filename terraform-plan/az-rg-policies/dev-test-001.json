@@ -1,1 +1,1 @@
-{"if": {"not": {"field": "location", "equals": "westeurope"}}, "then": {"effect": "Deny"}}
+{"if": {"not": {"field": "location", "equals": "westeurope"}}, "then": {"effect": "Denya"}}

@@ -19,6 +19,15 @@ env_specific_policy_collection = [
 },
 # END ANSIBLE MANAGED POLICY dev-test-001
 
+# BEGIN ANSIBLE MANAGED POLICY dev-test-001
+
+{
+  name = "test-001"
+  description = "ggg"
+  rule = "az-rg-policies/dev-test-001.json"
+},
+# END ANSIBLE MANAGED POLICY dev-test-001
+
 ## DYNAMIC-INSERT
 
 ]
