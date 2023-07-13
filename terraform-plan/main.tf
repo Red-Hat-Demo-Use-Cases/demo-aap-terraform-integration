@@ -1,3 +1,6 @@
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_group_policy_assignment
+# https://console.redhat.com/ansible/automation-hub/repo/published/cloud/terraform/
+
 # resource "azurerm_management_group" "example" {
 #   display_name = "Some Management Group"
 # }
@@ -11,6 +14,7 @@ resource "azurerm_policy_definition" "common_policies" {
   count = length(var.common_policy_collection)
   
   name                = var.common_policy_collection[count.index].name
+  description         = var.common_policy_collection[count.index].description
   policy_type         = "Custom"
   mode                = "All"
   display_name        = var.common_policy_collection[count.index].name
@@ -24,6 +28,7 @@ resource "azurerm_policy_definition" "env_specific_policies" {
   count = length(var.env_specific_policy_collection)
   
   name                = var.env_specific_policy_collection[count.index].name
+  description         = var.env_specific_policy_collection[count.index].description
   policy_type         = "Custom"
   mode                = "All"
   display_name        = var.env_specific_policy_collection[count.index].name
