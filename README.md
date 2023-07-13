@@ -19,6 +19,14 @@ EE is the new way to run ansible-playbook centrally. It is basically a container
 
 #### - The Ansible Playbooks [__ansible-playbook__](https://github.com/Red-Hat-Demo-Use-Cases/demo-aap-terraform-integration/tree/main/ansible-playbook)
 
+...tbd...
+
 #### - The Terraform Plans and tfvars files [__terraform-plan__](https://github.com/Red-Hat-Demo-Use-Cases/demo-aap-terraform-integration/tree/main/terraform-plan)
 
+...tbd...
+
 ## How to build and use this demo
+
+1. Build the Execution Environment
+2. Add project and template into AAP
+3. Add Machine Credential SSH Key for GitHub access
