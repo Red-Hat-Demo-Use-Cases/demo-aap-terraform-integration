@@ -1,5 +1,7 @@
 # Red Hat - AAP 2.4 & Terraform Integration Demo
-[For Inquiries](mailto:dcuerrie@redhat.com)
+**This is by no means, a fully functional project and should NOT be used as a whole to address any type of prod or non-prod infrastructure.**
+
+📧 [For Inquiries](mailto:dcuerrie@redhat.com)
 ## Project summary and motivation
 
 This project is a demonstration of an integration between Red Hat Ansible Automation Platform and HashiCorp Terraform.
