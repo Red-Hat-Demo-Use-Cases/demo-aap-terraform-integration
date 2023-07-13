@@ -31,12 +31,15 @@
         dest: "/tmp/aaa"
         clone: true
         force: true
+        depth: 1
+        single_branch: true
+        version: main
 
     - name: Apply plan for environment {{ policy_ev }}
       cloud.terraform.terraform:
         project_path: "/tmp/aaa/terraform-plan"
         force_init: true
-        variables_files: "{{ policy_ev }}.policies.tfvars"
+        variables_files: "{{ item }}.policies.tfvars"
         state: present  # applying a plan doesn't have a switch for this
         workspace: "{{ item }}"
       environment:

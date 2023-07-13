@@ -1,0 +1,120 @@
+---
+- name: Create new resource policy in Azure
+  hosts: localhost
+
+  vars_prompt:
+
+    - name: policy_ev
+      prompt: Choose an environment between dev, prod or common
+      private: false
+
+    - name: policy_name
+      prompt: New policy name
+      private: false
+
+    - name: policy_description
+      prompt: Summary of the policy rule
+      private: false
+
+    - name: policy_rule
+      prompt: JSON Object representing the new policy rule
+      private: false
+
+  pre_tasks:
+    - name: "Check if user selected a valid environment"
+      ansible.builtin.assert:
+        that: (env_list is contains(policy_ev) or policy_ev == 'common')
+
+  vars:
+    # Var used for the git sync
+    git_repo: "git@github.com:Red-Hat-Demo-Use-Cases/demo-aap-terraform-integration.git"
+    git_user: "rhaap"
+    git_email: "rhaap@rhaap.com"
+    local_repo_dir: "/tmp/aaa"
+    job_id: "{{ tower_job_id | default('no_job_id') }}"
+
+    # Var used to create the new policy in tfvars file
+    policy_unique_name: "{{ policy_ev }}-{{ policy_name }}"
+    new_policy_filename: "{{ policy_unique_name }}.json"
+    policies_tfvars_file: "{% if policy_ev == 'common' %}{{ policy_ev }}.policies.auto.tfvars{% else %}{{ policy_ev }}.policies.tfvars{% endif %}"
+
+    # Vars used to tell Terraform what tfvars to use for the refresh
+    env_list:
+      - dev
+      - prod
+    env_to_refresh: "{% if policy_ev == 'common' %}{{ env_list }}{% else %}['{{ policy_ev }}']{% endif %}"
+
+  tasks:
+
+    - name: Fetch the git repository that contain Terraform plan and tfvars file, so we can alter them and push them back
+      ansible.builtin.git:
+        accept_hostkey: true
+        # accept_newhostkey: true
+        repo: "{{ git_repo }}"
+        dest: "{{ local_repo_dir }}"
+        clone: true
+        force: true
+        depth: 1
+        single_branch: true
+        version: main
+
+    - name: Write policy in its json file which will be used by Terraform to populate rule variable
+      ansible.builtin.copy:
+        dest: "{{ local_repo_dir }}/terraform-plan/az-rg-policies/{{ new_policy_filename }}"
+        mode: '0644'
+        content: "{{ policy_rule }}"
+        # owner: bin
+        # group: wheel
+
+    - name: Add policy data as tf variables in the proper tfvras file based on the choosen environment
+      ansible.builtin.blockinfile:
+        path: "{{ local_repo_dir }}/terraform-plan/{{ policies_tfvars_file }}"
+        insertbefore: "## DYNAMIC-INSERT"
+        marker: "# {mark} ANSIBLE MANAGED BLOCK {{ policy_unique_name }}"
+        # marker_begin: "BEGIN {{ policy_unique_name }}"
+        # marker_end: "END {{ policy_unique_name }}"
+        block: |
+                  {
+                    name = "{{ policy_name }}"
+                    description = "{{ policy_description }}"
+                    rule = "az-rg-policies/{{ new_policy_filename }}"
+                  },
+
+    - name: Push back the Git repo, with the modified tfvars files and policy file
+
+      # Known ansible-lint error, we are using shell module instead of
+      # the native git module because there is no way to commit and
+      # push with the native one.
+
+      ansible.builtin.shell: |
+        git config --global user.name "{{ git_user }}"
+        git config --global user.email "{{ git_email }}"
+        git add -A && git commit -m "RHAAP Job ID {{ job_id }}: Automated Commit by Ansible  " && git push
+      args:
+        chdir: "{{ local_repo_dir }}"
+      ignore_errors: true
+      register: output
+      failed_when: >
+        output.msg != "" and
+        ("error" in output.msg or
+        "conflict" in output.msg or
+        "Errno" in output.msg or
+        "fatal" in output.msg or
+        (output.stdout != "" and
+        "nothing to commit, working tree clean" not in output.stdout) or
+        (output.stderr != ""))
+      changed_when: output.rc != 0
+
+    - name: Apply plan for the desired environment, including the common policies and the specific ones of {{ policy_ev }}
+      cloud.terraform.terraform:
+        project_path: "/tmp/aaa/terraform-plan"
+        force_init: true
+        variables_files: "{{ item }}.policies.tfvars"
+        state: present  # applying a plan doesn't have a switch for this
+        workspace: "{{ item }}"
+      environment:
+        ARM_SUBSCRIPTION_ID: "{{ ansible_env.AZURE_SUBSCRIPTION_ID }}"
+        ARM_TENANT_ID: "{{ ansible_env.AZURE_TENANT }}"
+        ARM_CLIENT_ID: "{{ ansible_env.AZURE_CLIENT_ID }}"
+        ARM_CLIENT_SECRET: "{{ ansible_env.AZURE_SECRET }}"
+      loop: "{{ env_to_refresh }}"
